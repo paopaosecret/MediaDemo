@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_iv_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="使用ImageView显示图片"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp"/>
+
+    <ImageView
+        android:id="@+id/iv_show"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@mipmap/img_fenjing"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_iv_show"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintHeight_percent="0.3"/>
+
+    <TextView
+        android:id="@+id/tv_sv_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="使用SurfaceView显示图片"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/iv_show"
+        android:layout_marginTop="40dp"/>
+    <SurfaceView
+        android:id="@+id/sv_show"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sv_show"
+        app:layout_constraintHeight_percent="0.3"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

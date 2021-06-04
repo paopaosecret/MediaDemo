@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/sv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/btn_start_preview"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ic_button_bg"
+        android:text="开始预览"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:layout_gravity="bottom"
+        />
+
+    <Button
+        android:id="@+id/btn_stop_preview"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/ic_button_bg"
+        android:textSize="18sp"
+        android:text="关闭预览"
+        android:textColor="@color/white"
+        android:layout_marginStart="150dp"
+        android:layout_gravity="bottom"
+        />
+
+</FrameLayout>
