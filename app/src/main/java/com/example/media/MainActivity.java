@@ -16,6 +16,7 @@ import com.example.media.video.VideoRecordActivity;
 import com.example.media.view.GLSurfaceViewActivity;
 import com.example.media.view.SurfaceViewActivity;
 import com.example.media.view.TextureViewActivity;
+import com.example.opengl.OpenGLActivity;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -92,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DecodeMp4Activity.class);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.btn_opengl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OpenGLActivity.class);
                 startActivity(intent);
             }
         });

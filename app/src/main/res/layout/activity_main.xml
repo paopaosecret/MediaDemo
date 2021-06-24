@@ -211,5 +211,35 @@
                 android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@id/btn_media_muxer"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_opengl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:background="@color/cardview_dark_background"
+            app:layout_constraintTop_toBottomOf="@id/ll_video">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:text="OpenGl示例"/>
+
+            <Button
+                android:id="@+id/btn_opengl"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/ic_button_bg"
+                android:backgroundTint="@color/button_solid"
+                android:text="OpenGl测试"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

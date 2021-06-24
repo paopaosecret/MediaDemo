@@ -9,7 +9,7 @@ import java.nio.FloatBuffer;
 public class Triangle {
     private FloatBuffer vertexBuffer;
 
-    //TODO 至少需要一个vertexshader来绘制一个形状和一个fragmentshader来为形状上色。
+    //TODO 一个Program至少需要一个vertexshader来绘制一个形状和一个fragmentshader来为形状上色。
     // 这些形状必须被编译然后被添加到一个OpenGLES program中，program之后被用来绘制形状
 
     //用于渲染形状的顶点的OpenGLES 图形代码
@@ -29,16 +29,16 @@ public class Triangle {
 
     private int mProgram;
 
-    // // 数组中每个顶点的坐标数
+    // 数组中每个顶点的坐标数
     static final int COORDS_PER_VERTEX = 3;
-    static float triangleCoords[] = {   // 按逆时针方向顺序
-            0.0f,  0.622008459f, 0.0f, // top
-            -0.5f, -0.311004243f, 0.0f, // bottom left
-            0.5f, -0.311004243f, 0.0f  // bottom right
+    static float triangleCoords[] = {   //TODO 按逆时方向，坐标原点为屏幕中心
+            0.0f,  0.5f, 0.0f,
+            -0.5f, -0.5f, 0.0f,
+            1.0f, -0.5f, 0.0f
     };
 
     // 设置颜色，分别为red, green, blue 和alpha (opacity)
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float color[] = { 1.0f, 0.05f, 0.0f, 1.0f };
 
     private int mPositionHandle;
     private int mColorHandle;
@@ -123,5 +123,6 @@ public class Triangle {
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+
     }
 }

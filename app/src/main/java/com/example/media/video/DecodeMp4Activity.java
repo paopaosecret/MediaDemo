@@ -156,7 +156,7 @@ public class DecodeMp4Activity  extends AppCompatActivity implements SurfaceHold
                     if (sampSize > 0 && time > -1) {
                         mMediaCodec.queueInputBuffer(inputIndex, 0, sampSize, time, 0);
                         //读取一帧后必须调用，提取下一帧
-                        mMediaExtractor.advance();
+                        mIsDecodeFinish = !mMediaExtractor.advance();
                         //控制帧率在30帧左右
                         try {
                             sleep(30);

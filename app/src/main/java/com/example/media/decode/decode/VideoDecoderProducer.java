@@ -1,4 +1,4 @@
 package com.example.media.decode.decode;
 
-public class VideoDecode {
+public class VideoDecoderProducer {
 }
