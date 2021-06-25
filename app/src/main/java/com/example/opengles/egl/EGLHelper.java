@@ -1,4 +1,4 @@
-package com.example.opengl.helper;
+package com.example.opengles.egl;
 
 import android.view.Surface;
 

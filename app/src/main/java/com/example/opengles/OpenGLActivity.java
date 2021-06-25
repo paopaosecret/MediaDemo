@@ -1,4 +1,4 @@
-package com.example.opengl;
+package com.example.opengles;
 
 import android.os.Bundle;
 import android.view.SurfaceHolder;
@@ -11,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.media.R;
 import com.example.media.view.openglbean.Triangle;
-import com.example.opengl.helper.EGL14Helper;
-import com.example.opengl.helper.EGLHelper;
+import com.example.opengles.egl.EGL14Helper;
+import com.example.opengles.egl.EGLHelper;
+import com.example.opengles.procedure.ProgramBean;
+import com.example.opengles.procedure.TriangleChain;
 
 public class OpenGLActivity extends AppCompatActivity {
 
@@ -34,7 +36,11 @@ public class OpenGLActivity extends AppCompatActivity {
         findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Triangle().draw();
+                ProgramBean bean = new ProgramBean();
+                TriangleChain chain = new TriangleChain();
+                chain.linkProgram(bean);
+                chain.drawTriangle(bean);
+
                 mEGLHelper.swapBuffer();
             }
         });

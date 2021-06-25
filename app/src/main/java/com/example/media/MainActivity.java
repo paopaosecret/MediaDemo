@@ -16,7 +16,7 @@ import com.example.media.video.VideoRecordActivity;
 import com.example.media.view.GLSurfaceViewActivity;
 import com.example.media.view.SurfaceViewActivity;
 import com.example.media.view.TextureViewActivity;
-import com.example.opengl.OpenGLActivity;
+import com.example.opengles.OpenGLActivity;
 
 public class MainActivity extends AppCompatActivity {
     @Override
