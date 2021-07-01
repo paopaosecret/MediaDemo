@@ -9,12 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+
     <Button
-        android:id="@+id/btn_show"
+        android:id="@+id/btn_triangle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="测试渲染"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="50dp"/>
+
+    <Button
+        android:id="@+id/btn_water"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加水印"
+        app:layout_constraintLeft_toRightOf="@+id/btn_triangle"
         android:layout_marginLeft="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="50dp"/>

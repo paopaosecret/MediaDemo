@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.media.R;
-import com.example.media.view.openglbean.Triangle;
 import com.example.opengles.egl.EGL14Helper;
 import com.example.opengles.egl.EGLHelper;
 import com.example.opengles.procedure.ProgramBean;
@@ -33,7 +32,19 @@ public class OpenGLActivity extends AppCompatActivity {
 
     private void initView() {
         mSvPreview = findViewById(R.id.sv_preview);
-        findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_triangle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProgramBean bean = new ProgramBean();
+                TriangleChain chain = new TriangleChain();
+                chain.linkProgram(bean);
+                chain.drawTriangle(bean);
+
+                mEGLHelper.swapBuffer();
+            }
+        });
+
+        findViewById(R.id.btn_triangle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ProgramBean bean = new ProgramBean();

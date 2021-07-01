@@ -3,13 +3,13 @@ package com.example.opengles.procedure.linkprogramhandler;
 import android.opengl.GLES20;
 import android.util.Log;
 
-import com.example.opengles.procedure.GLHandler;
+import com.example.opengles.procedure.Handler;
 import com.example.opengles.procedure.ProgramBean;
 
 /**
  * 第四步：创建空的OpenGL ES 程序对象
  */
-public class CreateProgramHandler extends GLHandler {
+public class CreateProgramHandler extends Handler {
 
     @Override
     public void handler(ProgramBean bean) {

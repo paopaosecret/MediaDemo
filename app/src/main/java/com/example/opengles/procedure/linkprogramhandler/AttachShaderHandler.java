@@ -3,13 +3,13 @@ package com.example.opengles.procedure.linkprogramhandler;
 import android.opengl.GLES20;
 import android.util.Log;
 
-import com.example.opengles.procedure.GLHandler;
+import com.example.opengles.procedure.Handler;
 import com.example.opengles.procedure.ProgramBean;
 
 /**
  * 第五步：将着色器对象连接到程序对象
  */
-public class AttachShaderHandler extends GLHandler {
+public class AttachShaderHandler extends Handler {
 
     @Override
     public void handler(ProgramBean bean) {

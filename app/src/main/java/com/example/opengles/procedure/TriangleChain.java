@@ -6,7 +6,7 @@ import com.example.opengles.procedure.linkprogramhandler.CreateProgramHandler;
 import com.example.opengles.procedure.linkprogramhandler.CreateShaderHandler;
 import com.example.opengles.procedure.linkprogramhandler.LinkProgramHandler;
 import com.example.opengles.procedure.linkprogramhandler.ShaderSourceHandler;
-import com.example.opengles.procedure.useprogramhandler.UseProgramHandler;
+import com.example.opengles.procedure.useprogramhandler.TrangleDrawHandler;
 
 /**
  * 首先，需要获取链接后的着色器对象一般需要六个步骤
@@ -19,11 +19,11 @@ import com.example.opengles.procedure.useprogramhandler.UseProgramHandler;
  * - 6、链接程序对象
  *
  * 如果没有错误，就可以在任何时候通知GL使用这个程序绘制
- *
+ * -
  *
  */
 public class TriangleChain {
-    private GLHandler h1,h2,h3,h4,h5,h6;
+    private Handler h1,h2,h3,h4,h5,h6;
 
     public TriangleChain(){
         h1 = new CreateShaderHandler();
@@ -46,6 +46,6 @@ public class TriangleChain {
     }
 
     public void drawTriangle(ProgramBean bean){
-        new UseProgramHandler().handler(bean);
+        new TrangleDrawHandler().handler(bean);
     }
 }

@@ -2,14 +2,14 @@ package com.example.opengles.procedure.useprogramhandler;
 
 import android.opengl.GLES20;
 
-import com.example.opengles.procedure.GLHandler;
+import com.example.opengles.procedure.Handler;
 import com.example.opengles.procedure.ProgramBean;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class UseProgramHandler extends GLHandler {
+public class TrangleDrawHandler extends Handler {
 
     private int mPositionIndex;
     private int mColorIndex;
@@ -62,6 +62,7 @@ public class UseProgramHandler extends GLHandler {
 
         //TODO 设置绘制三角形的颜色
         float color[] = { 1.0f, 0.05f, 0.0f, 1.0f };   // 设置颜色red, green, blue 和alpha (opacity)
+        GLES20.glUniform4fv(mColorIndex, 1, color, 0);      // 设置绘制三角形的颜色
         GLES20.glUniform4fv(mColorIndex, 1, color, 0);      // 设置绘制三角形的颜色
 
         //TODO 绘制三角形
