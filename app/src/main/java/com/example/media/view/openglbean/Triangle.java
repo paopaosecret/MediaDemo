@@ -6,6 +6,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * 绘制一个三角形
+ */
 public class Triangle {
     private FloatBuffer vertexBuffer;
 

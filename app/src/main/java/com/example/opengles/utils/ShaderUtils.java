@@ -16,7 +16,7 @@ public class ShaderUtils {
         Log.e("wuwang",op);
     }
 
-    public static int loadShader(int shaderType,String source){
+    public static int loadShader(int shaderType, String source){
         int shader= GLES20.glCreateShader(shaderType);
         if(0!=shader){
             GLES20.glShaderSource(shader,source);
