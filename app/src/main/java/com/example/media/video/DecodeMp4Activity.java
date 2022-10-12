@@ -28,16 +28,18 @@ import com.example.media.utils.FileUtils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class DecodeMp4Activity  extends AppCompatActivity implements SurfaceHolder.Callback{
+public class DecodeMp4Activity extends AppCompatActivity implements SurfaceHolder.Callback {
     private static final String TAG = "DecodeMp4Activity";
-    private TextView        mTvPath;
-    private String          mVideoFile              = "";
-    private SurfaceView     mSvShow;
-    private SurfaceHolder   mSurfaceHolder;
-    private MediaFormat     mMediaFormat;
-    private MediaExtractor  mMediaExtractor;
-    private MediaCodec      mMediaCodec;
-    private boolean         mIsDecodeFinish = false;
+
+    private TextView       mTvPath;
+    private String         mVideoFile      = "";
+    private SurfaceView    mSvShow;
+    private SurfaceHolder  mSurfaceHolder;
+    private MediaFormat    mMediaFormat;
+    private MediaExtractor mMediaExtractor;
+    private MediaCodec     mMediaCodec;
+    private boolean        mIsDecodeFinish = false;
+    private String         mMimeType       = "video/avc";
 
 
     @Override
@@ -99,9 +101,10 @@ public class DecodeMp4Activity  extends AppCompatActivity implements SurfaceHold
         }
 
         try {
-            mMediaCodec = MediaCodec.createDecoderByType("video/avc");
+            mMediaCodec = MediaCodec.createDecoderByType(mMimeType);
             Surface surface = mSurfaceHolder.getSurface();
             mMediaCodec.configure(mMediaFormat, surface, null, 0);
+            mMediaCodec.setVideoScalingMode(MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT);
             mMediaCodec.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,7 +117,7 @@ public class DecodeMp4Activity  extends AppCompatActivity implements SurfaceHold
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         mSurfaceHolder = holder;
-        if(!TextUtils.isEmpty(mVideoFile)){
+        if (!TextUtils.isEmpty(mVideoFile)) {
             playVideoFile(mVideoFile);
         }
     }
@@ -149,7 +152,7 @@ public class DecodeMp4Activity  extends AppCompatActivity implements SurfaceHold
                 if (inputIndex >= 0) {
                     ByteBuffer byteBuffer = mMediaCodec.getInputBuffer(inputIndex);
                     //读取一片或者一帧数据
-                    int sampSize = mMediaExtractor.readSampleData(byteBuffer,0);
+                    int sampSize = mMediaExtractor.readSampleData(byteBuffer, 0);
                     //读取时间戳
                     long time = mMediaExtractor.getSampleTime();
                     Log.d(TAG, "sampSize: " + sampSize + "time: " + time);

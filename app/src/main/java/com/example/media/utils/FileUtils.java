@@ -15,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 public class FileUtils {
+    public static boolean isSingleHome = false;
+
     /**
      * 根据 Uri 转换到真实的路径
      *

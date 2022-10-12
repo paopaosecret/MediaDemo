@@ -20,8 +20,6 @@ import java.nio.ByteBuffer;
 
 /**
  * MediaExtractor：MediaExtractor有助于提取解复用的，通常编码的媒体数据(来自数据源).
- *
- *
  */
 public class MuxerMP4Activity extends AppCompatActivity {
 
@@ -53,7 +51,7 @@ public class MuxerMP4Activity extends AppCompatActivity {
 
     private void initFile(String filePath) {
         File file = new File(filePath);
-        if(file.exists()){
+        if (file.exists()) {
             file.delete();
         }
         try {
@@ -66,9 +64,9 @@ public class MuxerMP4Activity extends AppCompatActivity {
 
     public class ExtractorMuxerThread extends Thread {
 
-        private String outputVideoFilePath  = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/Camera/1234.mp4";
-        private String outputAudioFilePath  = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/Camera/5678.mp4";
-        private String outputFilePath       = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/Camera/1234muxer.mp4";
+        private String outputVideoFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/Camera/1234.mp4";
+        private String outputAudioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/Camera/5678.mp4";
+        private String outputFilePath      = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/Camera/1234muxer.mp4";
 
         @Override
         public void run() {
@@ -76,17 +74,18 @@ public class MuxerMP4Activity extends AppCompatActivity {
             initFile(outputFilePath);
             mixer();
         }
+
         public void mixer() {
             MediaExtractor videoExtractor = null;
             MediaExtractor audioExtractor = null;
-            MediaMuxer mixMediaMuxer = null;
+            MediaMuxer     mixMediaMuxer  = null;
 
             try {
                 videoExtractor = new MediaExtractor();
                 videoExtractor.setDataSource(outputVideoFilePath);
-                int videoIndex = -1;
+                int         videoIndex       = -1;
                 MediaFormat videoTrackFormat = null;
-                int trackCount = videoExtractor.getTrackCount();
+                int         trackCount       = videoExtractor.getTrackCount();
                 for (int i = 0; i < trackCount; i++) {
                     videoTrackFormat = videoExtractor.getTrackFormat(i);
                     if (videoTrackFormat.getString(MediaFormat.KEY_MIME).startsWith("video/")) {
@@ -97,7 +96,7 @@ public class MuxerMP4Activity extends AppCompatActivity {
 
                 audioExtractor = new MediaExtractor();
                 audioExtractor.setDataSource(outputAudioFilePath);
-                int audioIndex = -1;
+                int         audioIndex       = -1;
                 MediaFormat audioTrackFormat = null;
                 trackCount = audioExtractor.getTrackCount();
                 for (int i = 0; i < trackCount; i++) {
@@ -121,8 +120,8 @@ public class MuxerMP4Activity extends AppCompatActivity {
                 mixMediaMuxer.start();
 
                 ByteBuffer byteBuffer = ByteBuffer.allocate(1024 * 1024);
-                long videotime;
-                long audiotime;
+                long       videotime;
+                long       audiotime;
 
                 {
                     videoExtractor.readSampleData(byteBuffer, 0);
@@ -158,7 +157,7 @@ public class MuxerMP4Activity extends AppCompatActivity {
 
                 while (true) {
                     int data = videoExtractor.readSampleData(byteBuffer, 0);
-                    Log.d(TAG , "videoExtractor readSampleData length = " + data);
+                    Log.d(TAG, "videoExtractor readSampleData length = " + data);
                     if (data < 0) {
                         break;
                     }
@@ -174,7 +173,7 @@ public class MuxerMP4Activity extends AppCompatActivity {
 
                 while (true) {
                     int data = audioExtractor.readSampleData(byteBuffer, 0);
-                    Log.d(TAG , "audioExtractor readSampleData length = " + data);
+                    Log.d(TAG, "audioExtractor readSampleData length = " + data);
                     if (data < 0) {
                         break;
                     }
@@ -196,10 +195,10 @@ public class MuxerMP4Activity extends AppCompatActivity {
                     mixMediaMuxer.stop();
                     mixMediaMuxer.release();
                 }
-                if (videoExtractor != null){
+                if (videoExtractor != null) {
                     videoExtractor.release();
                 }
-                if (audioExtractor != null){
+                if (audioExtractor != null) {
                     audioExtractor.release();
                 }
             }

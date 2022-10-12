@@ -25,6 +25,7 @@
     <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
     <!-- 使用Open GL ES end-->
     <application
+        android:name="com.example.MyApplication"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -48,7 +49,15 @@
         <activity android:name=".view.GLSurfaceViewActivity"/>
         <activity android:name=".video.MuxerMP4Activity"/>
         <activity android:name=".video.VideoRecordActivity"/>
-        <activity android:name=".video.DecodeMp4Activity"/>
+        <activity android:name=".video.DecodeMp4Activity"
+            android:screenOrientation="landscape" />
+        <activity android:name="com.example.test.SingleInstanceActivity"
+            android:launchMode="singleTask" />
+<!--            android:taskAffinity=".liveroom"-->
+<!--            android:alwaysRetainTaskState="true"-->
+<!--            android:allowTaskReparenting="true"-->
+<!--            android:screenOrientation="portrait"-->
+
 
         <activity android:name="com.example.opengles.OpenGLActivity"/>
     </application>

@@ -2,6 +2,7 @@ package com.example.media;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.media.audio.AudioRecordActivity;
 import com.example.media.audio.AudioTrackActivity;
 import com.example.media.image.ImageShowActivity;
+import com.example.media.utils.FileUtils;
+import com.example.media.utils.SPUtils;
 import com.example.media.video.DecodeMp4Activity;
 import com.example.media.video.MuxerMP4Activity;
 import com.example.media.video.VideoRecordActivity;
@@ -17,11 +20,14 @@ import com.example.media.view.GLSurfaceViewActivity;
 import com.example.media.view.SurfaceViewActivity;
 import com.example.media.view.TextureViewActivity;
 import com.example.opengles.OpenGLActivity;
+import com.example.test.SingleInstanceActivity;
 
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
@@ -104,5 +110,24 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        findViewById(R.id.btn_task).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SingleInstanceActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String str = SPUtils.get(MainActivity.this).getString("onActivityCreated", "default");
+        Log.d("MyApplication", "MainActivity onStart:" + str);
+        if(str.equals("SingleInstanceActivity")){
+            Intent intent1 = new Intent(MainActivity.this, SingleInstanceActivity.class);
+            startActivity(intent1);
+        }
     }
 }

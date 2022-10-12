@@ -38,41 +38,34 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class VideoRecordActivity extends Activity  implements SurfaceHolder.Callback,PreviewCallback{
+/**
+ * 👌64 录制
+ * 1、通过摄像头采集数据YUV,摄像头设置的NV21格式 {@link VideoRecordActivity#startcamera(Camera)} 回调 {@link VideoRecordActivity#onPreviewFrame(byte[], Camera)}
+ * 2、使用MediaCodec 解码 并保存到文件中{@link VideoRecordActivity#startEncoderThread()}
+ */
+public class VideoRecordActivity extends Activity implements SurfaceHolder.Callback, PreviewCallback {
 
-    private static final String TAG = "MainActivity";
-    private static int mOrientation = 0;
-    private int TIMEOUT_TIME = 10000;
-    private SurfaceView mSurfaceview;
-    private Button mStopRecord;
-    private Button mStartReord;
-    private SurfaceHolder surfaceHolder;
-    private Camera mCamera;
-    private Parameters parameters;
-
-    //Camera设置的预览宽高
-    int width = 640;
-    int height = 480;
-
-    //帧率20 或者 30 都可以，30已经相对来说效果最好了
-    int mFramerate = 30;
-
-    //比特率，可以调节，如果太大可以调小，太大会导致卡顿
-    int biteRate = width*height*30*8;
-
-    //最多存储多少帧的数据
-    public int mQueuesize = 10;
-    public  ArrayBlockingQueue<byte[]> YUVQueue = new ArrayBlockingQueue<byte[]>(mQueuesize);
-    private MediaCodec mMediaCodec;
-
-    //存储第一帧的数据，添加到关键帧的前面
-    public byte[] mFirstFrameConfig;
-
-    //存储录制的文件
-    private static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mediacodecDemo.h264";
-    private BufferedOutputStream outputStream;
-    public boolean isRuning = false;
-    public int mCameraId;
+    private static final String                     TAG          = "MainActivity";
+    private static       int                        mOrientation = 0;
+    private              int                        TIMEOUT_TIME = 10000;
+    private              SurfaceView                mSurfaceview;
+    private              Button                     mStopRecord;
+    private              Button                     mStartReord;
+    private              SurfaceHolder              surfaceHolder;
+    private              Camera                     mCamera;
+    private              Parameters                 parameters;
+    private              int                        width        = 640;
+    private              int                        height       = 480;
+    private              int                        mFramerate   = 30;
+    private              int                        biteRate     = width * height * 30 * 8;
+    public               int                        mQueuesize   = 10;
+    public               ArrayBlockingQueue<byte[]> YUVQueue     = new ArrayBlockingQueue<byte[]>(mQueuesize);
+    private              MediaCodec                 mMediaCodec;
+    public               byte[]                     mFirstFrameConfig;
+    private static       String                     path         = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mediacodecDemo.h264";
+    private              BufferedOutputStream       outputStream;
+    public               boolean                    isRuning     = false;
+    public               int                        mCameraId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +73,7 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
         setContentView(R.layout.activity_video_record);
 
         //TODO 1、初始化View
-        mSurfaceview = (SurfaceView)findViewById(R.id.surfaceview);
+        mSurfaceview = (SurfaceView) findViewById(R.id.surfaceview);
         mStopRecord = findViewById(R.id.stoprecord);
         mStartReord = findViewById(R.id.startrecord);
 
@@ -110,13 +103,13 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
      * 5、创建编码器
      * 6、启动编码线程
      */
-    private void startRecord(){
+    private void startRecord() {
         mCamera = getBackCamera();
         mOrientation = calculateCameraPreviewOrientation(this);
         startcamera(mCamera);
         createfile();
         createEncoder();
-        StartEncoderThread();
+        startEncoderThread();
     }
 
     /**
@@ -124,7 +117,7 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
      * 1。销毁camera
      * 2、停止MediaCodec解码
      */
-    private void stopRecord(){
+    private void stopRecord() {
         if (null != mCamera) {
             mCamera.setPreviewCallback(null);
             mCamera.stopPreview();
@@ -149,11 +142,11 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
             }
         });
 
-        WindowManager wm = (WindowManager) VideoRecordActivity.this.getSystemService(Context.WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
+        WindowManager            wm           = (WindowManager) VideoRecordActivity.this.getSystemService(Context.WINDOW_SERVICE);
+        int                      width        = wm.getDefaultDisplay().getWidth();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mSurfaceview.getLayoutParams();
         layoutParams.width = width;
-        layoutParams.height = width*4/3;
+        layoutParams.height = width * 4 / 3;
         mSurfaceview.setLayoutParams(layoutParams);
         surfaceHolder = mSurfaceview.getHolder();
         surfaceHolder.addCallback(this);
@@ -184,12 +177,13 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
 
     /**
      * Camera 预览帧时回调
+     *
      * @param data
      * @param camera
      */
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        putYUVData(data,data.length);
+        putYUVData(data, data.length);
     }
 
     public void putYUVData(byte[] buffer, int length) {
@@ -204,15 +198,16 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
      * 1.Camera 设置参数{@link Camera#setParameters(Parameters)}
      * 2.Camera 设置预览显示的画面{@link Camera#setPreviewDisplay(SurfaceHolder)}关联到SurfaceView上显示预览画面
      * 3.Camera 启动预览{@link Camera#startPreview()},
+     *
      * @param mCamera
      */
-    private void startcamera(Camera mCamera){
-        if(mCamera != null){
+    private void startcamera(Camera mCamera) {
+        if (mCamera != null) {
             try {
                 //TODO 设置setPreviewCallback(),当开始有显示的帧时，帧数据就会触发onPreviewFrame()回调。
                 mCamera.setPreviewCallback(this);
                 mCamera.setDisplayOrientation(mOrientation);
-                if(parameters == null){
+                if (parameters == null) {
                     parameters = mCamera.getParameters();
                 }
                 parameters = mCamera.getParameters();
@@ -241,60 +236,60 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
     }
 
     @SuppressLint("NewApi")
-    public void getMediaCodecList(){
+    public void getMediaCodecList() {
         //TODO 1、获取所有编解码器的数量
-        int codecsNums = MediaCodecList.getCodecCount();
-        MediaCodecInfo codecInfo = null;
-        for(int i = 0; i < codecsNums && codecInfo == null ; i++){
+        int            codecsNums = MediaCodecList.getCodecCount();
+        MediaCodecInfo codecInfo  = null;
+        for (int i = 0; i < codecsNums && codecInfo == null; i++) {
             //TODO 2、获取第i个编解码器的信息，根据信息判断是否为编码器
             MediaCodecInfo info = MediaCodecList.getCodecInfoAt(i);
-            if(info.isEncoder()){
+            if (info.isEncoder()) {
                 System.out.println("========这是一个编码器==========");
-            }else{
+            } else {
                 System.out.println("========这是一个解码器==========");
                 continue;
             }
             //TODO 3、查看该比编码器支持的编码类型，选取支持（"video/avc"）格式的编码器
             String[] types = info.getSupportedTypes();
-            boolean found = false;
-            for(int j=0; j<types.length && !found; j++){
-                if(types[j].equals("video/avc")){
+            boolean  found = false;
+            for (int j = 0; j < types.length && !found; j++) {
+                if (types[j].equals("video/avc")) {
                     found = true;
                 }
             }
-            if(!found){
+            if (!found) {
                 continue;
             }
             codecInfo = info;
         }
-        Log.d(TAG, codecInfo.getName() + "对应" +" video/avc");
+        Log.d(TAG, codecInfo.getName() + "对应" + " video/avc");
 
         //TODO 4、根据编码器信息检查所支持的颜色格式
-        int colorFormat = 0;
+        int                              colorFormat  = 0;
         MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType("video/avc");
-        Log.d(TAG,"=============capabilities.colorFormats.length================="+capabilities.colorFormats.length);
-        for(int i = 0; i < capabilities.colorFormats.length ; i++){
+        Log.d(TAG, "=============capabilities.colorFormats.length=================" + capabilities.colorFormats.length);
+        for (int i = 0; i < capabilities.colorFormats.length; i++) {
             int format = capabilities.colorFormats[i];
-            Log.d(TAG,"============formatformat===================="+format);
+            Log.d(TAG, "============formatformat====================" + format);
             switch (format) {
                 case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar:
-                    Log.d(TAG,"=========COLOR_FormatYUV420Planar");
+                    Log.d(TAG, "=========COLOR_FormatYUV420Planar");
                     continue;
                 case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedPlanar:
-                    Log.d(TAG,"========COLOR_FormatYUV420PackedPlanar");
+                    Log.d(TAG, "========COLOR_FormatYUV420PackedPlanar");
                     continue;
                 case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar:
-                    Log.d(TAG,"=======COLOR_FormatYUV420SemiPlanar");
+                    Log.d(TAG, "=======COLOR_FormatYUV420SemiPlanar");
                     continue;
                 case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedSemiPlanar:
-                    Log.d(TAG,"=======COLOR_FormatYUV420PackedSemiPlanar");
+                    Log.d(TAG, "=======COLOR_FormatYUV420PackedSemiPlanar");
                     continue;
                 case MediaCodecInfo.CodecCapabilities.COLOR_TI_FormatYUV420PackedSemiPlanar:
                     colorFormat = format;
-                    Log.d(TAG,"=======COLOR_TI_FormatYUV420PackedSemiPlanar");
+                    Log.d(TAG, "=======COLOR_TI_FormatYUV420PackedSemiPlanar");
                     continue;
                 default:
-                    Log.d(TAG,"=======COLOR_TI_" + format);
+                    Log.d(TAG, "=======COLOR_TI_" + format);
                     continue;
             }
         }
@@ -316,14 +311,14 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
         mMediaCodec.start();
     }
 
-    private void createfile(){
+    private void createfile() {
         File file = new File(path);
-        if(file.exists()){
+        if (file.exists()) {
             file.delete();
         }
         try {
             outputStream = new BufferedOutputStream(new FileOutputStream(file));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -332,12 +327,12 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
         try {
             mMediaCodec.stop();
             mMediaCodec.release();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void StopThread(){
+    public void StopThread() {
         isRuning = false;
         try {
             StopEncoder();
@@ -348,29 +343,29 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
         }
     }
 
-    public void StartEncoderThread(){
+    public void startEncoderThread() {
         Thread EncoderThread = new Thread(new Runnable() {
             @SuppressLint("NewApi")
             @Override
             public void run() {
                 isRuning = true;
-                byte[] input = null;
-                long pts =  0;
-                long generateIndex = 0;
+                byte[] input         = null;
+                long   pts           = 0;
+                long   generateIndex = 0;
 
                 while (isRuning) {
-                    if (YUVQueue.size() >0){
+                    if (YUVQueue.size() > 0) {
                         input = YUVQueue.poll();
-                        byte []  tempinput = rotateYUV420Degree90(input, width, height);
-                        byte[] yuv420sp = new byte[width*height*3/2];
-                        NV21ToNV12(tempinput,yuv420sp,height,width);
+                        byte[] tempinput = rotateYUV420Degree90(input, width, height);
+                        byte[] yuv420sp  = new byte[width * height * 3 / 2];
+                        NV21ToNV12(tempinput, yuv420sp, height, width);
                         input = yuv420sp;
                     }
                     if (input != null) {
                         try {
-                            ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
-                            ByteBuffer[] outputBuffers = mMediaCodec.getOutputBuffers();
-                            int inputBufferIndex = mMediaCodec.dequeueInputBuffer(-1);
+                            ByteBuffer[] inputBuffers     = mMediaCodec.getInputBuffers();
+                            ByteBuffer[] outputBuffers    = mMediaCodec.getOutputBuffers();
+                            int          inputBufferIndex = mMediaCodec.dequeueInputBuffer(-1);
                             if (inputBufferIndex >= 0) {
                                 pts = computePresentationTime(generateIndex);
                                 ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
@@ -386,29 +381,29 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
 								flags = 2；首帧信息帧。
 								flags = 1；关键帧。
 								flags = 0；普通帧。*/
-                            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-                            int outputBufferIndex = mMediaCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_TIME);
+                            MediaCodec.BufferInfo bufferInfo        = new MediaCodec.BufferInfo();
+                            int                   outputBufferIndex = mMediaCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_TIME);
 
                             while (outputBufferIndex >= 0) {
                                 //Log.i("AvcEncoder", "Get H264 Buffer Success! flag = "+bufferInfo.flags+",pts = "+bufferInfo.presentationTimeUs+"");
                                 ByteBuffer outputBuffer = outputBuffers[outputBufferIndex];
-                                byte[] outData = new byte[bufferInfo.size];
+                                byte[]     outData      = new byte[bufferInfo.size];
                                 outputBuffer.get(outData);
-                                if(bufferInfo.flags == 2){//首帧，记录信息
+                                if (bufferInfo.flags == 2) {//首帧，记录信息
                                     mFirstFrameConfig = new byte[bufferInfo.size];
                                     mFirstFrameConfig = outData;
-                                }else if(bufferInfo.flags == 1){
+                                } else if (bufferInfo.flags == 1) {
                                     byte[] keyframe = new byte[bufferInfo.size + mFirstFrameConfig.length];
                                     System.arraycopy(mFirstFrameConfig, 0, keyframe, 0, mFirstFrameConfig.length);
                                     System.arraycopy(outData, 0, keyframe, mFirstFrameConfig.length, outData.length);
 
                                     outputStream.write(keyframe, 0, keyframe.length);
-                                }else{
+                                } else {
                                     outputStream.write(outData, 0, outData.length);
                                 }
 
                                 mMediaCodec.releaseOutputBuffer(outputBufferIndex, false);
-                                if(isRuning){
+                                if (isRuning) {
                                     outputBufferIndex = mMediaCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_TIME);
                                 }
                             }
@@ -429,21 +424,19 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
         EncoderThread.start();
     }
 
-    private void NV21ToNV12(byte[] nv21,byte[] nv12,int width,int height){
-        if(nv21 == null || nv12 == null)return;
-        int framesize = width*height;
-        int i = 0,j = 0;
+    private void NV21ToNV12(byte[] nv21, byte[] nv12, int width, int height) {
+        if (nv21 == null || nv12 == null) return;
+        int framesize = width * height;
+        int i         = 0, j = 0;
         System.arraycopy(nv21, 0, nv12, 0, framesize);
-        for(i = 0; i < framesize; i++){
+        for (i = 0; i < framesize; i++) {
             nv12[i] = nv21[i];
         }
-        for (j = 0; j < framesize/2; j+=2)
-        {
-            nv12[framesize + j-1] = nv21[j+framesize];
+        for (j = 0; j < framesize / 2; j += 2) {
+            nv12[framesize + j - 1] = nv21[j + framesize];
         }
-        for (j = 0; j < framesize/2; j+=2)
-        {
-            nv12[framesize + j] = nv21[j+framesize-1];
+        for (j = 0; j < framesize / 2; j += 2) {
+            nv12[framesize + j] = nv21[j + framesize - 1];
         }
     }
 
@@ -456,33 +449,29 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
 
     /**
      * 此处为顺时针旋转旋转90度
-     * @param data 旋转前的数据
-     * @param imageWidth 旋转前数据的宽
+     *
+     * @param data        旋转前的数据
+     * @param imageWidth  旋转前数据的宽
      * @param imageHeight 旋转前数据的高
      * @return 旋转后的数据
      */
-    private byte[] rotateYUV420Degree90(byte[] data, int imageWidth, int imageHeight)
-    {
-        byte [] yuv = new byte[imageWidth*imageHeight*3/2];
+    private byte[] rotateYUV420Degree90(byte[] data, int imageWidth, int imageHeight) {
+        byte[] yuv = new byte[imageWidth * imageHeight * 3 / 2];
         // Rotate the Y luma
         int i = 0;
-        for(int x = 0;x < imageWidth;x++)
-        {
-            for(int y = imageHeight-1;y >= 0;y--)
-            {
-                yuv[i] = data[y*imageWidth+x];
+        for (int x = 0; x < imageWidth; x++) {
+            for (int y = imageHeight - 1; y >= 0; y--) {
+                yuv[i] = data[y * imageWidth + x];
                 i++;
             }
         }
         // Rotate the U and V color components
-        i = imageWidth*imageHeight*3/2-1;
-        for(int x = imageWidth-1;x > 0;x=x-2)
-        {
-            for(int y = 0;y < imageHeight/2;y++)
-            {
-                yuv[i] = data[(imageWidth*imageHeight)+(y*imageWidth)+x];
+        i = imageWidth * imageHeight * 3 / 2 - 1;
+        for (int x = imageWidth - 1; x > 0; x = x - 2) {
+            for (int y = 0; y < imageHeight / 2; y++) {
+                yuv[i] = data[(imageWidth * imageHeight) + (y * imageWidth) + x];
                 i--;
-                yuv[i] = data[(imageWidth*imageHeight)+(y*imageWidth)+(x-1)];
+                yuv[i] = data[(imageWidth * imageHeight) + (y * imageWidth) + (x - 1)];
                 i--;
             }
         }
@@ -504,6 +493,7 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
      * 设置预览角度
      * setDisplayOrientation本身只能改变预览的角度
      * previewFrameCallback以及拍摄出来的照片是不会发生改变的，拍摄出来的照片角度依旧不正常的，拍摄的照片需要自行处理
+     *
      * @param activity
      */
     public int calculateCameraPreviewOrientation(Activity activity) {
@@ -534,7 +524,7 @@ public class VideoRecordActivity extends Activity  implements SurfaceHolder.Call
         } else {
             result = (info.orientation - degrees + 360) % 360;
         }
-        System.out.println("=========orienttaion============="+result);
+        System.out.println("=========orienttaion=============" + result);
         return result;
     }
 }
